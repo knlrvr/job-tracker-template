@@ -1,0 +1,32 @@
+[
+  {
+    "company_name": "Company A", 
+    "role": "Software Engineer ",
+    "locations": [
+      "NYC"
+    ],
+    "date_applied": "12/26/24",
+    "url": "url-to-application-on-company-website",
+    "company_url": "url-to-company-website"
+  },
+  {
+    "company_name": "Company B",
+    "role": "Software Engineer ",
+    "locations": [
+      "SF"
+    ],
+    "date_applied": "12/20/24", 
+    "url": "url-to-application-on-company-website",
+    "company_url": "url-to-company-website"
+  },
+    {
+    "company_name": "Company C",
+    "role": "Software Engineer ",
+    "locations": [
+      "Charlotte, NC"
+    ],
+    "date_applied": "12/26/24", 
+    "url": "url-to-application-on-company-website",
+    "company_url": "url-to-company-website"
+  }
+]
