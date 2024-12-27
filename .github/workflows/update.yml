@@ -1,0 +1,68 @@
+name: Update README
+
+on:
+  push:
+    paths:
+      - 'jobs.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Verify files
+        run: |
+          echo "Listing workspace contents:"
+          ls -la
+          echo "Checking for required files:"
+          test -f jobs.json || (echo "jobs.json not found" && exit 1)
+          test -f README.md || (echo "README.md not found" && exit 1)
+          test -f update-readme.js || (echo "update-readme.js not found" && exit 1)
+          
+      - name: Update README
+        run: |
+          echo "Content of jobs.json:"
+          cat jobs.json
+          echo "Running update script..."
+          node update-readme.js
+          echo "Updated README content:"
+          cat README.md
+          
+      - name: Check for changes
+        id: git-check
+        run: |
+          if git diff --exit-code README.md; then
+            echo "No changes to commit"
+            echo "changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "Changes detected"
+            echo "changes=true" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Commit changes
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --local user.email ""
+          git config --local user.name ""
+          git add README.md
+          git commit -m "Update README with latest listings"
+          
+      - name: Push changes
+        if: steps.git-check.outputs.changes == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
